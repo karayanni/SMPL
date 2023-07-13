@@ -35,11 +35,19 @@ def main(model_folder,
          plotting_module='pyrender',
          use_face_contour=False):
 
+    # Insert body_pose here for rendering it.
+    body_pose = [[0.0, 0.0, 0.0, -90.0, -90.0, -90.0, -90.0, -90.0, -90.0, 0.0, 0.0, 0.0, -90.0, -90.0, -90.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
+
+    body_pose = [body_pose]
+
+    body_pose_tensor = torch.tensor(body_pose, dtype=torch.float32)
+    body_pose_tensor = body_pose_tensor.view(1, -1)
     model = smplx.create(model_folder, model_type=model_type,
                          gender=gender, use_face_contour=use_face_contour,
                          num_betas=num_betas,
                          num_expression_coeffs=num_expression_coeffs,
-                         ext=ext)
+                         ext=ext,
+                         body_pose=body_pose_tensor)
     print(model)
 
     betas, expression = None, None
@@ -122,12 +130,12 @@ def main(model_folder,
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='SMPL-X Demo')
 
-    parser.add_argument('--model-folder', required=True, type=str,
+    parser.add_argument('--model-folder', required=True, type=str, default="smpl/smpl/models",
                         help='The path to the model folder')
-    parser.add_argument('--model-type', default='smplx', type=str,
+    parser.add_argument('--model-type', default='smpl', type=str,
                         choices=['smpl', 'smplh', 'smplx', 'mano', 'flame'],
                         help='The type of model to load')
-    parser.add_argument('--gender', type=str, default='neutral',
+    parser.add_argument('--gender', type=str, default='male',
                         help='The gender of the model')
     parser.add_argument('--num-betas', default=10, type=int,
                         dest='num_betas',
@@ -158,11 +166,23 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    model_folder = osp.expanduser(osp.expandvars(args.model_folder))
-    model_type = args.model_type
+    # model_folder = osp.expanduser(osp.expandvars(args.model_folder))
+    # model_type = args.model_type
+    # plot_joints = args.plot_joints
+    # use_face_contour = args.use_face_contour
+    # gender = args.gender
+    # ext = args.ext
+    # plotting_module = args.plotting_module
+    # num_betas = args.num_betas
+    # num_expression_coeffs = args.num_expression_coeffs
+    # sample_shape = args.sample_shape
+    # sample_expression = args.sample_expression
+
+    model_folder = osp.expanduser(osp.expandvars('C:/Users/nader/PycharmProjects/SMPL/smpl/smpl/models'))
+    model_type = "smpl"
     plot_joints = args.plot_joints
     use_face_contour = args.use_face_contour
-    gender = args.gender
+    gender = "male"
     ext = args.ext
     plotting_module = args.plotting_module
     num_betas = args.num_betas
